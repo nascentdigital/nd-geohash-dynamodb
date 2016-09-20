@@ -1,0 +1,23 @@
+### require 'berkshelf/vagrant'
+
+Vagrant.configure("2") do |config|
+
+  # name host
+  config.vm.hostname = "geohash-dynamodb-local"
+
+  # deploy using debian 7.5 (wheezy)
+  config.vm.box = "puphpet/debian75-x64"
+
+  # expose machine as private network (host access only)
+  config.vm.network "private_network", ip: "192.168.100.10"
+
+  # increase RAM to 3GB
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "3072"
+  end
+
+  # provision shell scripts
+  config.vm.provision "shell", path: "vagrant/provision.sh"
+  config.vm.provision "shell", path: "vagrant/dynamodb/provision.sh"
+
+end

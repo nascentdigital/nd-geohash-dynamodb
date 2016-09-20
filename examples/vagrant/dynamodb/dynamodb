@@ -1,0 +1,24 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          dynamodb
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: dynamodb
+# Description:       dynamodb daemon for local development
+### END INIT INFO
+
+case $1 in
+    start)
+        /bin/bash /bin/dynamodb-start.sh
+    ;;
+    stop)
+        /bin/bash /bin/dynamodb-stop.sh
+    ;;
+    restart)
+        /bin/bash /bin/dynamodb-stop.sh
+        /bin/bash /bin/dynamodb-start.sh
+    ;;
+esac
+exit 0

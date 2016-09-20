@@ -1,0 +1,29 @@
+{
+  "name": "nd-geohash-dynamodb",
+  "description": "A NodeJS extension for Dynamodb that enabled high performance geospatial queries.",
+  "author": "Nascent Digital",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nascentdigital/nd-geohash-dynamodb.git"
+  },
+  "keywords": [
+    "dynamodb",
+    "geospatial",
+    "geohash",
+    "aws"
+  ],
+  "engines": {
+    "node": ">=6.3.0"
+  },
+  "dependencies": {
+    "nd-geohash-core": "^0.0.0",
+    "lodash": "^4.14.0",
+    "bluebird": "~3.4.1",
+    "aws-sdk": "^2.6.3"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/nascentdigital/nd-geohash-dynamodb#readme",
+  "main": "index.js"
+}

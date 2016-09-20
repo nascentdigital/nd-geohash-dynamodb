@@ -1,0 +1,1 @@
+exports.DynamoGeospatialClient = require('./lib/DynamoGeospatialClient');
