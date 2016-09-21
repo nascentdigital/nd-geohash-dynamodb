@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "puphpet/debian75-x64"
 
   # expose machine as private network (host access only)
-  config.vm.network "private_network", ip: "192.168.100.10"
+  config.vm.network "private_network", ip: "10.210.210.10"
 
   # increase RAM to 3GB
   config.vm.provider "virtualbox" do |vb|

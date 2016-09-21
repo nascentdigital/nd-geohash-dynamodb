@@ -1,20 +1,31 @@
 'use strict';
 
+// imports
 const
-    AWS = require('aws-sdk'),
-    geohash = require('../index');
+    _ = require('lodash'),
+    geohash = require('../index'),
+    schools = require('./schools');
 
 
-const geohashClient = new geohash.DynamoGeospatialClient({
-    dynamoDB: new AWS.DynamoDB({
-        endpoint: new AWS.Endpoint('http://192.168.100.10:8000'),
-        region: 'us-east-1'
-    })
-});
-
-const school = {
-    name: 'St. Richards',
-    type: 'catholic',
-    address: '960 Bellamy Rd N, Scarborough, ON M1H 1H1'
+// exports
+module.exports = function(dynamoDB) {
+    return createSchools(dynamoDB);
 };
-geohashClient.putItem('Schools', school, 43.7681320, -79.2394290);
+
+
+// helper methods
+function createSchools(dynamoDB) {
+
+    // create client
+    const geohashClient = new geohash.DynamoGeospatialClient({ dynamoDB: dynamoDB});
+
+    // add some schools
+    return _.reduce(schools, (promise, school) => {
+
+        const location = school.Location;
+        return geohashClient
+            .putAsync('Schools', school.Item, location.lat, location.lng)
+            .then(() => console.log('added school: %s', school.Item.name));
+    }, Promise.bind(this));
+}
+

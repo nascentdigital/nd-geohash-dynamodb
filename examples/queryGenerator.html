@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/lodash/4.16.0/lodash.min.js"></script>
+    <script src="schools.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<button onclick="capture()">Capture</button>
+<div>
+    <span>min:</span>&nbsp;<span id="minBounds"></span>
+</div>
+<div>
+    <span>max:</span>&nbsp;<span id="maxBounds"></span>
+</div>
+<script type="text/javascript">
+    var map;
+    var markerPopup;
+
+    function initMap() {
+
+        // create map
+        map = new google.maps.Map(document.getElementById('map'), {
+            mapTypeControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            navigationControl: true,
+            center: {lat: 43.764206, lng: -79.766591},
+            minZoom: 7,
+            maxZoom: 12,
+            zoom: 8
+        });
+
+        // create info window
+        markerPopup = new google.maps.InfoWindow({
+            size: new google.maps.Size(100,50)
+        });
+
+        // load markers
+        var markerBounds = new google.maps.LatLngBounds();
+        _.forEach(schools, function(school) {
+
+            // create marker
+            var markerPosition = new google.maps.LatLng(school.Location.lat, school.Location.lng);
+            var marker = new google.maps.Marker({
+                position: markerPosition,
+                title: school.Item.name,
+                school: school.Item
+            });
+
+            // wire marker click event
+            google.maps.event.addListener(marker, 'click', function () {
+                showMarker(marker);
+            });
+
+            // bind to map
+            marker.setMap(map);
+
+            // include in bounds
+            markerBounds.extend(markerPosition);
+        });
+
+        // fit map to include all markers
+        map.fitBounds(markerBounds);
+    }
+    function showMarker(marker) {
+        markerPopup.setContent(marker.school.name);
+        markerPopup.open(map, marker);
+    }
+    function capture() {
+
+        // show min bounds
+        var bounds = map.getBounds().toJSON();
+        var minBoundsElement = document.getElementById('minBounds');
+        minBoundsElement.innerHTML = bounds.south + ', ' + bounds.west;
+
+        // show max bounds
+        var maxBoundsElement = document.getElementById('maxBounds');
+        maxBoundsElement.innerHTML = bounds.north + ', ' + bounds.east;
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAsYBt1bMJIB_PwSrMdAfsogzgKHGBNfI&callback=initMap" async defer></script>
+</body>
+</html>
