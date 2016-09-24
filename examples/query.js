@@ -2,36 +2,20 @@
 
 const
     _ = require('lodash'),
-    geohash = require('../index'),
     schools = require('./schools');
 
-module.exports = function(dynamoDB) {
-    return querySchools(dynamoDB);
+module.exports = function(dynamoDB, geohashClient) {
+    return querySchools(dynamoDB, geohashClient);
 };
 
 
-function querySchools(dynamoDB) {
-
-    // FIXME: simulate cache for now
-    const geohashCache = new Set();
-
-    // create client
-    const geohashClient = new geohash.DynamoGeospatialClient({
-        dynamoDB: dynamoDB,
-        cache: geohashCache
-    });
-
-    // populate cache
-    _.forEach(schools, (school) => {
-        geohashCache.add(geohashClient.getHashKey(school.Location.lat, school.Location.lng));
-    });
-    console.log('cache size: ' + geohashCache.size);
+function querySchools(dynamoDB, geohashClient) {
 
     // add some schools
     return geohashClient
         .queryAsync('Schools',
-            43.60311967129431, -79.72756247167979,
-            43.752101797181005, -79.45290426855479)
+            42.590518117714225, -81.93702121386718,
+            43.791933329802255, -79.73975558886718)
         .then((schools) => {
             console.log('found %d schools', schools.length);
             _.forEach(schools, (school) => console.log('   %s', school.name))

@@ -1,14 +1,16 @@
 // imports
 const
     _ = require('lodash'),
+    geohash = require('../index'),
     Promise = require('bluebird');
 
 
 // exports
-module.exports = function (dynamoDB) {
+module.exports = function (dynamoDB, geohashClient) {
 
     return deleteTables(dynamoDB)
-        .then(() => createTables(dynamoDB));
+        .then(() => createTables(dynamoDB))
+        .then(() => geohash.DynamoGeospatialClient.createCacheTableAsync(dynamoDB));
 };
 
 
@@ -24,7 +26,8 @@ function deleteTables(dynamoDB) {
             _.forEach(result.TableNames, (tableName) => {
 
                 // skip if table name isn't recognized
-                if (tableName != 'Schools') {
+                if (tableName != 'Schools'
+                    && tableName != 'nd-geohash_HashKeyCache') {
                     return;
                 }
 
